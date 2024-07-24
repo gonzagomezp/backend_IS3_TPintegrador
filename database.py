@@ -88,4 +88,4 @@ class MySQLDatabase:
             raise e
         
 # Uso de la clase
-db = MySQLDatabase(host=os.getenv("HOST"), database='Usuarios', user='root', password='roott')
+db = MySQLDatabase(host="localhost", database='Usuarios', user='root', password='roott')
