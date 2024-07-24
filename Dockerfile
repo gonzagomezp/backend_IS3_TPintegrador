@@ -12,7 +12,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Exponer el puerto en el que la aplicación se ejecutará
-EXPOSE 5000
+EXPOSE 8000
 
 # Comando para ejecutar la aplicación
 CMD ["uvicorn", "main:app", "--reload"]
