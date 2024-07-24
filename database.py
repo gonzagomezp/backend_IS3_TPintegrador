@@ -4,7 +4,7 @@ import os
 
 class MySQLDatabase:
     def __init__(self, database, user, password):
-        self.host = "34.70.233.252" #'/cloudsql/your-project-id:your-region:your-instance-id' 
+        self.host = '/cloudsql/your-project-id:your-region:your-instance-id' #"34.70.233.252"  
         self.database = database
         self.user = user
         self.password = password
