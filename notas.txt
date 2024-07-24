@@ -20,3 +20,10 @@ docker-compose up --build
 
 
 docker run --name my_mysql_container -e MYSQL_ROOT_PASSWORD=roott -e MYSQL_DATABASE=Usuarios -p 3306:3306 -d mysql:latest
+
+Direccion ip publica:
+https://www.whatismyip.com/
+190.230.18.237
+en la mascara debemos poner /32 para indicar que es una unica ip
+
+para produccion cambiar la direccion ip publica

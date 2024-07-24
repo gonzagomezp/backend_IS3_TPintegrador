@@ -1,38 +1,27 @@
+import mysql.connector
+from mysql.connector import Error
 import os
-from google.cloud.sql.connector import Connector
-import pymysql
-from sqlalchemy import create_engine, text
-from sqlalchemy.exc import SQLAlchemyError
 
 class MySQLDatabase:
-    def __init__(self):
-        self.db_user = "root"
-        self.db_pass = "roott"
-        self.db_name = "Usuarios"
-        self.cloud_sql_instance = "frontend-430223:us-central1:mysql-server"
-        self.connector = Connector()
-        self.engine = None
-
-    def getconn(self):
-        return self.connector.connect(
-            self.cloud_sql_instance,
-            "pymysql",
-            user=self.db_user,
-            password=self.db_pass,
-            db=self.db_name
-        )
+    def __init__(self, database, user, password):
+        self.host = "34.70.233.252" #'/cloudsql/your-project-id:your-region:your-instance-id' 
+        self.database = database
+        self.user = user
+        self.password = password
+        self.connection = None
 
     def connect(self):
         try:
-            if self.engine is None:
-                self.engine = create_engine(
-                    "mysql+pymysql://",
-                    creator=self.getconn,
+            if self.connection is None or not self.connection.is_connected():
+                self.connection = mysql.connector.connect(
+                    host=self.host,
+                    database=self.database,
+                    user=self.user,
+                    password=self.password
                 )
-            with self.engine.connect() as connection:
                 print("Conexión a MySQL establecida")
-                self.create_users_table_if_not_exists(connection)
-        except SQLAlchemyError as e:
+                self.create_users_table_if_not_exists()
+        except Error as e:
             print("-------------------------------")
             print("DATABASE ERROR")
             print()
@@ -40,61 +29,63 @@ class MySQLDatabase:
             print()
             print("-------------------------------")
             raise e
-
-    def create_users_table_if_not_exists(self, connection):
+        
+    def create_users_table_if_not_exists(self):
         create_table_query = """
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            password VARCHAR(255) NOT NULL,
-            username VARCHAR(255) NOT NULL UNIQUE
-        )
+            username VARCHAR(32) NOT NULL UNIQUE,
+            password VARCHAR(32) NOT NULL
+            );
         """
         try:
-            connection.execute(text(create_table_query))
+            cursor = self.connection.cursor()
+            cursor.execute(create_table_query)
+            cursor.close()
             print("Tabla 'users' creada o ya existe")
-        except SQLAlchemyError as e:
+        except Error as e:
             print(f"Error al crear la tabla 'users': {e}")
             raise e
 
     def disconnect(self):
-        if self.engine is not None:
-            self.engine.dispose()
+        if self.connection and self.connection.is_connected():
+            self.connection.close()
             print("Conexión a MySQL cerrada")
-
+    
     def get_users(self):
         try:
-            with self.engine.connect() as connection:
-                result = connection.execute(text("SELECT * FROM users"))
-                users = result.fetchall()
-                return users
-        except SQLAlchemyError as e:
+            cursor = self.connection.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM users")
+            users = cursor.fetchall()
+            cursor.close()
+            return users
+        except Error as e:
             print(f"Error al obtener usuarios: {e}")
             raise e
 
     def get_user(self, username: str):
         try:
-            with self.engine.connect() as connection:
-                result = connection.execute(
-                    text("SELECT * FROM users WHERE username = :username"), {'username': username}
-                )
-                user = result.fetchone()
-                return user
-        except SQLAlchemyError as e:
+            cursor = self.connection.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+            user = cursor.fetchone()
+            cursor.close()
+            return user
+        except Error as e:
             print(f"Error al obtener usuario: {e}")
             raise e
 
-    def insert_user(self, username: str, password: str):
+    def insert_user(self, username: str,  password: str):
         try:
-            with self.engine.connect() as connection:
-                result = connection.execute(
-                    text("INSERT INTO users (username, password) VALUES (:username, :password)"), {'username': username, 'password': password}
-                )
-                user_id = result.lastrowid
-                connection.commit()
-                return user_id
-        except SQLAlchemyError as e:
+            cursor = self.connection.cursor()
+            cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
+            self.connection.commit()
+            user_id = cursor.lastrowid
+            cursor.close()
+            return user_id
+        except Error as e:
             print(f"Error al insertar usuario: {e}")
+            self.connection.rollback()
             raise e
-
+        
 # Uso de la clase
-db = MySQLDatabase()
+db = MySQLDatabase(database='Usuarios', user='root', password='roott')
