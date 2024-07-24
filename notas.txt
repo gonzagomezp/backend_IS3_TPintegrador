@@ -1,0 +1,22 @@
+# Crear un entorno virtual
+python -m venv myenv
+
+# Activar el entorno virtual
+source myenv/bin/activate
+
+# Instalar los paquetes desde requirements.txt
+pip install -r requirements.txt
+
+# Desactivar el entorno virtual (cuando hayas terminado)
+deactivate
+
+#sobreescribir requirements.txt
+pip freeze > requirements.txt
+
+#correr app
+uvicorn main:app --reload
+
+docker-compose up --build
+
+
+docker run --name my_mysql_container -e MYSQL_ROOT_PASSWORD=roott -e MYSQL_DATABASE=Usuarios -p 3306:3306 -d mysql:latest
