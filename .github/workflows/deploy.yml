@@ -48,5 +48,4 @@ jobs:
         gcloud run deploy backend \
           --image gonzagomezp1/backend:latest \
           --platform managed \
-          --add-cloudsql-instances frontend-430223:us-central1:mysql-server \
           --quiet
