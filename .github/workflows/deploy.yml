@@ -49,5 +49,4 @@ jobs:
           --image gonzagomezp1/backend:latest \
           --platform managed \
           # --add-cloudsql-instances frontend-430223:us-central1:mysql-server \
-          # --timeout 900s \
           --quiet
