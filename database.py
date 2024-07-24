@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 import os
+from fastapi import HTTPException
 
 class MySQLDatabase:
     def __init__(self, database, user, password):
@@ -28,9 +29,11 @@ class MySQLDatabase:
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
-            raise e
+            #raise e
         
     def create_users_table_if_not_exists(self):
+        if self.connection.is_connected() == False:
+            print("BASE DE DATOS NO CONECTADA")
         create_table_query = """
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,6 +57,10 @@ class MySQLDatabase:
     
     def get_users(self):
         try:
+            if self.connection.is_connected() == False:
+                print ("BASE DE DATOS NO CONECTADA")
+                raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+            
             cursor = self.connection.cursor(dictionary=True)
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
@@ -65,6 +72,10 @@ class MySQLDatabase:
 
     def get_user(self, username: str):
         try:
+            if self.connection.is_connected() == False:
+                print ("BASE DE DATOS NO CONECTADA")
+                raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+            
             cursor = self.connection.cursor(dictionary=True)
             cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
             user = cursor.fetchone()
@@ -76,6 +87,10 @@ class MySQLDatabase:
 
     def insert_user(self, username: str,  password: str):
         try:
+            if self.connection.is_connected() == False:
+                print ("BASE DE DATOS NO CONECTADA")
+                raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+                       
             cursor = self.connection.cursor()
             cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
             self.connection.commit()
