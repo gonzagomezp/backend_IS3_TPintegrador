@@ -49,3 +49,4 @@ jobs:
           --image gonzagomezp1/backend:latest \
           --platform managed \
           --quiet
+          
