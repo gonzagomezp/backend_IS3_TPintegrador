@@ -4,8 +4,8 @@ import os
 from fastapi import HTTPException
 
 class MySQLDatabase:
-    def __init__(self, database, user, password):
-        self.host = '/cloudsql/frontend-430223:us-central1:mysql-server' #"34.70.233.252"  
+    def __init__(self, database, user, password): # '/cloudsql/frontend-430223:us-central1:mysql-server'
+        self.host = "127.0.0.1" #"34.70.233.252" para probar localmente  
         self.database = database
         self.user = user
         self.password = password
