@@ -1,11 +1,11 @@
+import os
+from google.cloud.sql.connector import Connector
 import mysql.connector
 from mysql.connector import Error
-import os
 from fastapi import HTTPException
 
 class MySQLDatabase:
     def __init__(self, database, user, password):
-        self.host = "34.70.233.252" #esto lo puedo cambiar luego     
         self.database = database
         self.user = user
         self.password = password
@@ -14,11 +14,20 @@ class MySQLDatabase:
     def connect(self):
         try:
             if self.connection is None or not self.connection.is_connected():
+                connector = Connector()
+                connection = connector.connect(
+                    "frontend-430223:us-central1:mysql-server",
+                    "pymysql",
+                    user=self.user,
+                    password=self.password,
+                    db=self.database
+                )
                 self.connection = mysql.connector.connect(
-                    host=self.host,
+                    host="localhost",
                     database=self.database,
                     user=self.user,
-                    password=self.password
+                    password=self.password,
+                    connection=connection
                 )
                 print("Conexión a MySQL establecida")
                 self.create_users_table_if_not_exists()
@@ -29,8 +38,8 @@ class MySQLDatabase:
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
-            raise e
-        
+            #raise e
+
     def create_users_table_if_not_exists(self):
         if self.connection.is_connected() == False:
             print("BASE DE DATOS NO CONECTADA")
@@ -59,7 +68,7 @@ class MySQLDatabase:
         try:
             if self.connection.is_connected() == False:
                 print ("BASE DE DATOS NO CONECTADA")
-                raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+                raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
             
             cursor = self.connection.cursor(dictionary=True)
             cursor.execute("SELECT * FROM users")
@@ -74,7 +83,7 @@ class MySQLDatabase:
         try:
             if self.connection.is_connected() == False:
                 print ("BASE DE DATOS NO CONECTADA")
-                raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+                raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
             
             cursor = self.connection.cursor(dictionary=True)
             cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
@@ -85,12 +94,12 @@ class MySQLDatabase:
             print(f"Error al obtener usuario: {e}")
             raise e
 
-    def insert_user(self, username: str,  password: str):
+    def insert_user(self, username: str, password: str):
         try:
             if self.connection.is_connected() == False:
                 print ("BASE DE DATOS NO CONECTADA")
-                raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
-                       
+                raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+                   
             cursor = self.connection.cursor()
             cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
             self.connection.commit()
@@ -101,6 +110,6 @@ class MySQLDatabase:
             print(f"Error al insertar usuario: {e}")
             self.connection.rollback()
             raise e
-        
+
 # Uso de la clase
 db = MySQLDatabase(database='Usuarios', user='root', password='roott')

@@ -10,6 +10,7 @@ COPY . .
 
 # Instalar las dependencias
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install "cloud-sql-python-connector[pymysql]"
 
 # Exponer el puerto en el que la aplicación se ejecutará
 EXPOSE 8000
