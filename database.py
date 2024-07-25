@@ -1,6 +1,6 @@
 # para probar localmente
 # import mysql.connector
-# from mysql.connector import Error
+from mysql.connector import Error
 from fastapi import HTTPException
 
 #para produccion
