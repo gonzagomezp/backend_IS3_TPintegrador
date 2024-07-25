@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 #para produccion
 import sqlalchemy
-#from google.cloud.sql.connector import Connector
+from google.cloud.sql.connector import Connector
 
 class MySQLDatabase:
     def __init__(self, database, user, password): # '/cloudsql/frontend-430223:us-central1:mysql-server'
@@ -14,20 +14,16 @@ class MySQLDatabase:
         self.user = user
         self.password = password
         self.connection = None
-        #para produccion
-        self.connectionName = 'frontend-430223:us-central1:mysql-server'
-        
-        #para pruebas local
         self.host = "34.70.233.252" # para probar localmente  
         
     #para produccion
     def connect(self):
         try:
-            connector = Connector()
+            connector = Connector(refresh_strategy="lazy", ip_type="public")
 
             def getconn():
                 conn = connector.connect(
-                    f"{self.connectionName}",
+                    'frontend-430223:us-central1:mysql-server'
                     "pymysql",
                     user=self.user,
                     password=self.password,
