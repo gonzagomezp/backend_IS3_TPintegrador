@@ -45,8 +45,7 @@ jobs:
     - name: Deploy to Google Cloud Run
       run: |
         gcloud config set run/region us-central1
-        gcloud run deploy backend4 \
+        gcloud run deploy backend \
           --image gonzagomezp1/backend:latest \
           --platform managed \
           --quiet
-          
