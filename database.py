@@ -1,11 +1,11 @@
 # para probar localmente
 # import mysql.connector
-from mysql.connector import Error
 from fastapi import HTTPException
 
 #para produccion
 import sqlalchemy
 from google.cloud.sql.connector import Connector
+
 
 class MySQLDatabase:
     def __init__(self, database, user, password): # '/cloudsql/frontend-430223:us-central1:mysql-server'
@@ -46,6 +46,7 @@ class MySQLDatabase:
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
+            raise e
             
     #para probar local
     """ def connect(self):
@@ -106,8 +107,8 @@ class MySQLDatabase:
             users = cursor.fetchall()
             cursor.close()
             return users
-        except Error as e:
-            print(f"Error al obtener usuarios: {e}")
+        except Exception as e:
+            print(f"Exception al obtener usuarios: {e}")
             raise e
 
     def get_user(self, username: str):
@@ -121,8 +122,8 @@ class MySQLDatabase:
             user = cursor.fetchone()
             cursor.close()
             return user
-        except Error as e:
-            print(f"Error al obtener usuario: {e}")
+        except Exception as e:
+            print(f"Exception al obtener usuario: {e}")
             raise e
 
     def insert_user(self, username: str,  password: str):
@@ -137,8 +138,8 @@ class MySQLDatabase:
             user_id = cursor.lastrowid
             cursor.close()
             return user_id
-        except Error as e:
-            print(f"Error al insertar usuario: {e}")
+        except Exception as e:
+            print(f"Exception al insertar usuario: {e}")
             self.connection.rollback()
             raise e
         
