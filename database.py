@@ -29,7 +29,7 @@ class MySQLDatabase:
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
-            #raise e
+            raise e
         
     def create_users_table_if_not_exists(self):
         if self.connection.is_connected() == False:
