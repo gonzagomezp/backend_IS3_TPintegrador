@@ -67,6 +67,8 @@ class MySQLDatabase:
             print()
             print("-------------------------------")
             #raise e """
+            
+    #----------------HASTA ACA---------------------------------------------        
         
     def create_users_table_if_not_exists(self):
         if self.connection.is_connected() == False:
@@ -94,6 +96,7 @@ class MySQLDatabase:
     
     def get_users(self):
         try:
+            print("PING")
             if self.connection.is_connected() == False:
                 print ("BASE DE DATOS NO CONECTADA")
                 raise HTTPException( 500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
