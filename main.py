@@ -9,7 +9,6 @@ app = FastAPI()
 async def startup_event():
     
     db.connect()
-    print("RUNNING")
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -52,6 +51,8 @@ async def get_users():
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
 
