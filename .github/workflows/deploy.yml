@@ -45,8 +45,7 @@ jobs:
     - name: Deploy to Google Cloud Run
       run: |
         gcloud config set run/region us-central1
-        gcloud run deploy backend2 \
+        gcloud run deploy backend \
           --image gonzagomezp1/backend:latest \
           --platform managed \
-          --add-cloudsql-instances frontend-430223:us-central1:mysql-server \
           --quiet
