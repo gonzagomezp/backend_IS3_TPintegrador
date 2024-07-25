@@ -1,5 +1,5 @@
 # para probar localmente
-# import mysql.connector
+import mysql.connector
 from fastapi import HTTPException
 
 #para produccion
@@ -15,7 +15,8 @@ class MySQLDatabase:
         self.password = password
         self.connection = None
         self.host = "34.70.233.252" # para probar localmente  
-        
+     
+    """    
     #para produccion
     def connect(self):
         try:
@@ -49,7 +50,8 @@ class MySQLDatabase:
             raise e
             
     #para probar local
-    """ def connect(self):
+    """ 
+    def connect(self):
         try:
             if self.connection is None or not self.connection.is_connected():
                 self.connection = mysql.connector.connect(
@@ -60,14 +62,14 @@ class MySQLDatabase:
                 )
                 print("Conexión a MySQL establecida")
                 self.create_users_table_if_not_exists()
-        except Error as e:
+        except Exception as e:
             print("-------------------------------")
             print("DATABASE ERROR")
             print()
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
-            #raise e """
+            #raise e 
             
     #----------------HASTA ACA---------------------------------------------        
         
