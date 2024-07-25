@@ -36,6 +36,8 @@ async def get_user(username: str):
             return user
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    except HTTPException as xp:
+        raise xp
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
@@ -46,7 +48,9 @@ async def get_users():
         if users:
             return users
         else:
-            return "no users in database"
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No user found in database")
+    except HTTPException as xp:
+        raise xp
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 

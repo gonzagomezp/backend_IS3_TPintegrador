@@ -13,24 +13,20 @@ class MySQLDatabase:
 
     def connect(self):
         try:
-            if self.connection is None or not self.connection.is_connected():
-                connector = Connector()
-                connection = connector.connect(
-                    "frontend-430223:us-central1:mysql-server",
-                    "pymysql",
-                    user=self.user,
-                    password=self.password,
-                    db=self.database
-                )
-                self.connection = mysql.connector.connect(
-                    host="localhost",
-                    database=self.database,
-                    user=self.user,
-                    password=self.password,
-                    connection=connection
-                )
-                print("Conexión a MySQL establecida")
-                self.create_users_table_if_not_exists()
+            connector = Connector()
+            self.connection = connector.connect(
+                "frontend-430223:us-central1:mysql-server",
+                "pymysql",
+                user=self.user,
+                password=self.password,
+                db=self.database
+            )
+                
+            print()
+            print(self.connection)
+            print()
+            print("Conexión a MySQL establecida")
+            self.create_users_table_if_not_exists()
         except Error as e:
             print("-------------------------------")
             print("DATABASE ERROR")
@@ -41,8 +37,6 @@ class MySQLDatabase:
             #raise e
 
     def create_users_table_if_not_exists(self):
-        if self.connection.is_connected() == False:
-            print("BASE DE DATOS NO CONECTADA")
         create_table_query = """
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,17 +54,17 @@ class MySQLDatabase:
             raise e
 
     def disconnect(self):
-        if self.connection and self.connection.is_connected():
+        if self.connection:
             self.connection.close()
             print("Conexión a MySQL cerrada")
     
     def get_users(self):
         try:
-            if self.connection.is_connected() == False:
+            if self.connection == False:
                 print ("BASE DE DATOS NO CONECTADA")
                 raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
             
-            cursor = self.connection.cursor(dictionary=True)
+            cursor = self.connection.cursor()
             cursor.execute("SELECT * FROM users")
             users = cursor.fetchall()
             cursor.close()
@@ -81,11 +75,11 @@ class MySQLDatabase:
 
     def get_user(self, username: str):
         try:
-            if self.connection.is_connected() == False:
+            if self.connection == False:
                 print ("BASE DE DATOS NO CONECTADA")
                 raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
             
-            cursor = self.connection.cursor(dictionary=True)
+            cursor = self.connection.cursor()
             cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
             user = cursor.fetchone()
             cursor.close()
@@ -96,7 +90,7 @@ class MySQLDatabase:
 
     def insert_user(self, username: str, password: str):
         try:
-            if self.connection.is_connected() == False:
+            if self.connection == False:
                 print ("BASE DE DATOS NO CONECTADA")
                 raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
                    
