@@ -1,17 +1,58 @@
-import mysql.connector
-from mysql.connector import Error
-import os
+# para probar localmente
+# import mysql.connector
+# from mysql.connector import Error
 from fastapi import HTTPException
+
+#para produccion
+import sqlalchemy
+#from google.cloud.sql.connector import Connector
 
 class MySQLDatabase:
     def __init__(self, database, user, password): # '/cloudsql/frontend-430223:us-central1:mysql-server'
-        self.host = "127.0.0.1" #"34.70.233.252" para probar localmente  
+        
         self.database = database
         self.user = user
         self.password = password
         self.connection = None
-
+        #para produccion
+        self.connectionName = 'frontend-430223:us-central1:mysql-server'
+        
+        #para pruebas local
+        self.host = "34.70.233.252" # para probar localmente  
+        
+    #para produccion
     def connect(self):
+        try:
+            connector = Connector()
+
+            def getconn():
+                conn = connector.connect(
+                    f"{self.connectionName}",
+                    "pymysql",
+                    user=self.user,
+                    password=self.password,
+                    db=self.database
+                )
+                return conn
+            
+            pool = sqlalchemy.create_engine(
+                "mysql+pymysql://",
+                creator=getconn,
+            )
+            
+            self.connection = pool.connect()
+            print("Conexión a MySQL establecida")
+            self.create_users_table_if_not_exists()
+        except Exception as e:
+            print("-------------------------------")
+            print("DATABASE ERROR")
+            print()
+            print(f"Error al conectar a MySQL: {e}")
+            print()
+            print("-------------------------------")
+            
+    #para probar local
+    """ def connect(self):
         try:
             if self.connection is None or not self.connection.is_connected():
                 self.connection = mysql.connector.connect(
@@ -29,7 +70,7 @@ class MySQLDatabase:
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
-            #raise e
+            #raise e """
         
     def create_users_table_if_not_exists(self):
         if self.connection.is_connected() == False:
