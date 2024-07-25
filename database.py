@@ -86,7 +86,7 @@ class MySQLDatabase:
             cursor.execute(create_table_query)
             cursor.close()
             print("Tabla 'users' creada o ya existe")
-        except Error as e:
+        except Exception as e:
             print(f"Error al crear la tabla 'users': {e}")
             raise e
 
