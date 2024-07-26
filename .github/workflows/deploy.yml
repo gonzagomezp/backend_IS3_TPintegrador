@@ -31,6 +31,9 @@ jobs:
         cache-from: type=registry,ref=gonzagomezp1/backend:cache
         cache-to: type=registry,ref=gonzagomezp1/backend:cache,mode=max
 
+    - name: Logout from Docker Hub
+      run: docker logout
+
     - name: Verify Docker image in local cache
       run: docker images gonzagomezp1/backend:latest
 
@@ -45,7 +48,7 @@ jobs:
         project_id: frontend-430223
 
     - name: Configure Docker to use the gcloud command-line tool as a credential helper
-      run: gcloud auth configure-docker
+      run: echo Y | gcloud auth configure-docker gcr.io
 
     - name: Tag Docker image for Google Container Registry
       run: docker tag gonzagomezp1/backend:latest gcr.io/frontend-430223/backend:latest
@@ -62,6 +65,3 @@ jobs:
           --region us-central1 \
           --allow-unauthenticated \
           --quiet
-
-    - name: Logout from Docker Hub
-      run: docker logout
