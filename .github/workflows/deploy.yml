@@ -45,7 +45,7 @@ jobs:
     - name: Deploy to Google Cloud Run
       run: |
         gcloud config set run/region us-central1
-        gcloud run deploy backend-service \
+        gcloud run deploy backend \
           --image gcr.io/frontend-430223/backend:latest \
           --platform managed \
           --region us-central1 \
