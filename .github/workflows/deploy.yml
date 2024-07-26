@@ -32,9 +32,6 @@ jobs:
         cache-to: type=registry,ref=gonzagomezp1/backend:cache,mode=max
 
 
-    - name: Logout from Docker Hub
-      run: docker logout
-
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
       with:
@@ -44,7 +41,6 @@ jobs:
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: frontend-430223
-
 
     - name: Configure Docker to use the gcloud command-line tool as a credential helper
       run: gcloud auth configure-docker
@@ -64,3 +60,6 @@ jobs:
           --region us-central1 \
           --allow-unauthenticated \
           --quiet
+
+    - name: Logout from Docker Hub
+      run: docker logout
