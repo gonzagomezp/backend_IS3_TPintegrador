@@ -1,4 +1,4 @@
-name: Build, Push Docker image and Deploy to GKE
+name: Build, Push Docker image and Deploy to Cloud Run
 
 on:
   push:
@@ -31,6 +31,11 @@ jobs:
         cache-from: type=registry,ref=gonzagomezp1/backend:cache
         cache-to: type=registry,ref=gonzagomezp1/backend:cache,mode=max
 
+    - name: Logout from Docker Hub
+      run: docker logout
+
+    - name: Verify Docker image in local cache
+      run: docker images gonzagomezp1/backend:latest
 
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
@@ -60,6 +65,3 @@ jobs:
           --region us-central1 \
           --allow-unauthenticated \
           --quiet
-
-    - name: Logout from Docker Hub
-      run: docker logout
