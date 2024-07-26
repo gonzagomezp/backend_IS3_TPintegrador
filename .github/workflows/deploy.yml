@@ -28,9 +28,6 @@ jobs:
         context: .
         push: true
         tags: gonzagomezp1/backend:latest
-        
-    - name: Logout from Docker Hub
-      run: docker logout
 
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v1
@@ -44,6 +41,10 @@ jobs:
 
     - name: Push Docker image to Google Container Registry
       run: docker push gcr.io/frontend-430223/backend:latest
+
+
+    - name: Logout from Docker Hub
+      run: docker logout
 
     - name: Deploy to Google Cloud Run
       run: |
