@@ -46,7 +46,7 @@ async def get_users():
     try:
         users = controller.GetUsers()
         if users:
-            return "LA RE CONCHA DE TU HRMANAAAAAAAAAAAAA"#users
+            return users
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No user found in database")
     except HTTPException as xp:
