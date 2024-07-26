@@ -3,6 +3,8 @@ import controller
 from fastapi import HTTPException, status,FastAPI
 from database import db
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 
 @app.on_event("startup")
@@ -13,6 +15,14 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     db.disconnect()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def insert_user(json: dict):
