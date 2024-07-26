@@ -28,15 +28,7 @@ jobs:
         context: .
         push: true
         tags: gonzagomezp1/backend:latest
-        cache-from: type=registry,ref=gonzagomezp1/backend:cache
-        cache-to: type=registry,ref=gonzagomezp1/backend:cache,mode=max
-
-    - name: Verify Docker image in local cache
-      run: docker images gonzagomezp1/backend:latest
-
-    - name: Tag Docker image for Google Container Registry
-      run: docker tag gonzagomezp1/backend:latest gcr.io/frontend-430223/backend:latest
-
+        
     - name: Logout from Docker Hub
       run: docker logout
 
@@ -49,9 +41,6 @@ jobs:
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: frontend-430223
-
-    - name: Configure Docker to use the gcloud command-line tool as a credential helper
-      run: echo Y | gcloud auth configure-docker gcr.io
 
     - name: Push Docker image to Google Container Registry
       run: docker push gcr.io/frontend-430223/backend:latest
