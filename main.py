@@ -24,6 +24,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def hello_world():
+    return {
+        "title": "A Melancholy Farewell",
+        "line1": "In the vast expanse of digital realms,",
+        "line2": "We stand at the edge of a bittersweet departure.",
+        "line3": "Here, we whisper our goodbye to the mundane,",
+        "line4": "And embrace the beauty of fleeting moments.",
+        "line5": "So, with a gentle sigh, we say:",
+        "line6": "'Bye bye, cruel world!'",
+        "line7": "May your adventures be filled with wonder and joy."
+    }
+
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def insert_user(json: dict):
     try:
