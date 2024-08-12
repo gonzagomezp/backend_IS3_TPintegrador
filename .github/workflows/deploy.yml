@@ -45,7 +45,9 @@ jobs:
     - name: Deploy to Google Cloud Run
       run: |
         gcloud config set run/region us-central1
-        gcloud run deploy backend \
-          --image gonzagomezp1/backend:latest \
+        gcloud run deploy backend1 \
+          --image docker.io/gonzagomezp1/backend:latest \
           --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated \
           --quiet
