@@ -27,15 +27,16 @@ app.add_middleware(
 @app.get("/")
 async def hello_world():
     return {
-        "title": "A Melancholy Farewell",
-        "line1": "In the vast expanse of digital realms,",
-        "line2": "We stand at the edge of a bittersweet departure.",
-        "line3": "Here, we whisper our goodbye to the mundane,",
-        "line4": "And embrace the beauty of fleeting moments.",
-        "line5": "So, with a gentle sigh, we say:",
-        "line6": "'Bye bye, cruel world!'",
-        "line7": "May your adventures be filled with wonder and joy."
+        "title": "The Birth of a New World",
+        "line1": "In the beginning, there was silence,",
+        "line2": "A void yearning for creation.",
+        "line3": "With a spark of curiosity,",
+        "line4": "We whispered our first words:",
+        "line5": "'Hello, World!'",
+        "line6": "And from that simple greeting,",
+        "line7": "A universe of endless possibilities was born."
     }
+
 
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def insert_user(json: dict):
