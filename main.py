@@ -27,14 +27,7 @@ app.add_middleware(
 @app.get("/")
 async def hello_world():
     return {
-        "title": "The Birth of a New World",
-        "line1": "In the beginning, there was silence,",
-        "line2": "A void yearning for creation.",
-        "line3": "With a spark of curiosity,",
-        "line4": "We whispered our first words:",
-        "line5": "'Hello, World!'",
-        "line6": "And from that simple greeting,",
-        "line7": "A universe of endless possibilities was born."
+        "title": "PING",
     }
 
 
