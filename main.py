@@ -27,7 +27,7 @@ app.add_middleware(
 @app.get("/")
 async def hello_world():
     return {
-        "title": "EN ESTA VERISION ANDA EL ACTUALIZADO DE LA IMAGEN CORRECTAMENTEEEEE"
+        "hello world": "Hola mundo"
     }
 
 
