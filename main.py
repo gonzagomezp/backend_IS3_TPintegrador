@@ -27,7 +27,7 @@ app.add_middleware(
 @app.get("/")
 async def hello_world():
     return {
-        "puto el que lee": "=)"
+        "puto el que lee": "XD"
     }
 
 
