@@ -72,9 +72,10 @@ async def get_users():
 @app.delete("/user/{id}")
 async def delete_user(id: int):
     try:
+        print(id)
         deleted = controller.DeleteUser(id)
         if deleted:
-            return deleted
+            return {"deleted": deleted}
         else:
             raise HTTPException(status_code=500, detail="something went wrong")
     except HTTPException as xp:
