@@ -74,10 +74,11 @@ async def delete_user(id: int):
     try:
         print(id)
         deleted = controller.DeleteUser(id)
+        print(deleted)
         if deleted:
             return {"deleted": deleted}
         else:
-            raise HTTPException(status_code=500, detail="something went wrong")
+            raise HTTPException(status_code=404, detail="No se encontro ningun usuario con ese id")
     except HTTPException as xp:
         raise xp
     except Exception as e:

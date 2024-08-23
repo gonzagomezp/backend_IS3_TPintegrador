@@ -110,15 +110,12 @@ class MySQLDatabase:
             if self.connection == False:
                 print ("BASE DE DATOS NO CONECTADA")
                 raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
-            
-            print(type(idd))
-            print(idd)
-            
             cursor = self.connection.cursor()
             cursor.execute("DELETE FROM users WHERE id = %s", (idd,))
             self.connection.commit()
             deleted = cursor.rowcount
             cursor.close()
+            
             #devolver True si se eliminó al menos un usuario, False en caso contrario
             return deleted > 0
         except Error as e:
