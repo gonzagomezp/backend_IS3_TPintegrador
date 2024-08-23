@@ -27,9 +27,8 @@ app.add_middleware(
 @app.get("/")
 async def hello_world():
     return {
-        "puto el que lee": "XD"
+        "Hello World": "This is a FastAPI application"
     }
-
 
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def insert_user(json: dict):
@@ -43,7 +42,6 @@ async def insert_user(json: dict):
     except Exception as e:
         # Si ocurre un error, lanzar una excepción HTTP con código de estado 500
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
 
 @app.get("/user/{username}")
 async def get_user(username: str):
@@ -71,8 +69,19 @@ async def get_users():
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
-
+@app.delete("/user/{id}")
+async def delete_user(id: int):
+    try:
+        deleted = controller.DeleteUser(id)
+        if deleted:
+            return deleted
+        else:
+            raise HTTPException(status_code=500, detail="something went wrong")
+    except HTTPException as xp:
+        raise xp
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
 

@@ -27,3 +27,6 @@ def GetUserByUsername(username):
 
 def InsertUser(username, password):
     return db.insert_user(username, password)
+
+def DeleteUser(id):
+    return db.delete_user(id)

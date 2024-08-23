@@ -105,5 +105,23 @@ class MySQLDatabase:
             self.connection.rollback()
             raise e
 
+    def delete_user(self, id: int):
+        try:
+            if self.connection == False:
+                print ("BASE DE DATOS NO CONECTADA")
+                raise HTTPException(500, "FALLO EN LA CONEXCION CON LA BASE DE DATOS")
+            
+            cursor = self.connection.cursor()
+            cursor.execute("DELETE FROM users WHERE id = %s", (id,))
+            self.connection.commit()
+            deleted = cursor.rowcount
+            cursor.close()
+            #devolver True si se eliminó al menos un usuario, False en caso contrario
+            return deleted > 0
+        except Error as e:
+            print(f"Error al eliminar usuario: {e}")
+            self.connection.rollback()
+            raise e
+    
 # Uso de la clase
 db = MySQLDatabase(database='Usuarios', user='root', password='roott')
