@@ -1,5 +1,4 @@
 import uvicorn
-import controller
 from fastapi import HTTPException, status,FastAPI
 from database import db
 
@@ -37,7 +36,7 @@ async def insert_user(json: dict):
         password = json.get("password","N/A")
         print(json)
         # Lógica para insertar el usuario y obtener el ID
-        result = controller.InsertUser(username, password)
+        result = db.insert_user(username, password)
         return {"UserId": result} # Devolver el ID del usuario
     except Exception as e:
         # Si ocurre un error, lanzar una excepción HTTP con código de estado 500
@@ -46,7 +45,7 @@ async def insert_user(json: dict):
 @app.get("/user/{username}")
 async def get_user(username: str):
     try:
-        user = controller.GetUserByUsername(username)
+        user = db.get_user(username)
         if user:
             return user
         else:
@@ -59,7 +58,7 @@ async def get_user(username: str):
 @app.get("/users")
 async def get_users():
     try:
-        users = controller.GetUsers()
+        users = db.get_users()
         if users:
             return users
         else:
@@ -72,9 +71,7 @@ async def get_users():
 @app.delete("/user/{id}")
 async def delete_user(id: int):
     try:
-        print(id)
-        deleted = controller.DeleteUser(id)
-        print(deleted)
+        deleted = db.delete_user(id)
         if deleted:
             return {"deleted": deleted}
         else:
