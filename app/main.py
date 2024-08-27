@@ -1,7 +1,7 @@
 #main.py
 import os
 import uvicorn
-from fastapi import HTTPException, status, FastAPI
+from fastapi import HTTPException, FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import db  # Importar la base de datos real
@@ -35,25 +35,33 @@ app.add_middleware(
 
 @app.get("/")
 async def hello_world():
+    db_instance = get_db()
+    if type(db_instance).__name__ == "MockMySQLDatabase":
+        return {
+            "Hello World": "This is a FastAPI application with a mock database"
+        }
     return {
-        "Hello World": "This is a FastAPI application"
+        "Hello World": "This is a FastAPI application with a real database"
     }
 
-@app.post("/user", status_code=status.HTTP_201_CREATED)
+@app.post("/user", status_code=201)
 async def insert_user(json: dict):
     try:
         db_instance = get_db()
-        username = json.get("username")
-        password = json.get("password")
+        username = json.get("username", None)
+        password = json.get("password", None)
         if not username or not password:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username and password are required")   
-        print(json)
+            raise HTTPException(400, "Username and password are required")   
         # Lógica para insertar el usuario y obtener el ID
         result = db_instance.insert_user(username, password)
         return {"UserId": result}  # Devolver el ID del usuario
+    except HTTPException as xp:
+        # Si ocurre una excepción HTTP, lanzarla de nuevo
+        print("HTTPexception >>",xp.detail)
+        raise xp
     except Exception as e:
         # Si ocurre un error, lanzar una excepción HTTP con código de estado 500
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(500, detail=str(e))
 
 @app.get("/user/{username}")
 async def get_user(username: str):
@@ -63,11 +71,11 @@ async def get_user(username: str):
         if user:
             return user
         else:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            raise HTTPException(404, detail="User not found")
     except HTTPException as xp:
         raise xp
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(500, detail=str(e))
 
 @app.get("/users")
 async def get_users():
@@ -77,11 +85,11 @@ async def get_users():
         if users:
             return users
         else:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No user found in database")
+            raise HTTPException(404, detail="No user found in database")
     except HTTPException as xp:
         raise xp
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(500, detail=str(e))
 
 @app.delete("/user/{id}")
 async def delete_user(id: int):
@@ -91,11 +99,11 @@ async def delete_user(id: int):
         if deleted:
             return {"deleted": deleted}
         else:
-            raise HTTPException(status_code=404, detail="No se encontró ningún usuario con ese ID")
+            raise HTTPException(404, detail="No se encontró ningún usuario con ese ID")
     except HTTPException as xp:
         raise xp
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(500, detail=str(e))
     
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

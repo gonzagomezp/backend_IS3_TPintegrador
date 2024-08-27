@@ -1,6 +1,6 @@
 # Mock para MySQLDatabase
 class MockMySQLDatabase:
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         self.users = []
 
     def connect(self):
@@ -10,9 +10,14 @@ class MockMySQLDatabase:
         pass
 
     def get_users(self):
+        print("GET USERS")
+        print(self.users)
         return self.users
 
     def get_user(self, username: str):
+        print("GET USER")
+        print(username)
+        print(self.users)
         for user in self.users:
             if user[1] == username:
                 return user
@@ -23,6 +28,7 @@ class MockMySQLDatabase:
             raise ValueError("Username and password are required")
         user_id = len(self.users) + 1
         self.users.append((user_id, username, password))
+        print(self.users)
         return user_id
 
     def delete_user(self, idd: int):
