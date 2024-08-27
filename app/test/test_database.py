@@ -48,7 +48,7 @@ test_delete_user_error: Simula un error al eliminar un usuario y verifica que se
 
 import pytest
 from unittest.mock import MagicMock, patch
-from database import MySQLDatabase
+from app.database import MySQLDatabase
 from mysql.connector import Error
 from fastapi import HTTPException
 

@@ -1,4 +1,3 @@
-import os
 from google.cloud.sql.connector import Connector
 import mysql.connector
 from mysql.connector import Error

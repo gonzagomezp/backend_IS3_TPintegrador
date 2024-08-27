@@ -2,3 +2,5 @@
 /__pycache__/
 /.pytest_cache/
 notas.txt
+/app/__pycache__/
+/app/test/__pycache__/

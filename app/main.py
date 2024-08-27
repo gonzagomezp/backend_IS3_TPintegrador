@@ -4,7 +4,7 @@ import uvicorn
 from fastapi import HTTPException, status, FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from database import db  # Importar la base de datos real
+from app.database import db  # Importar la base de datos real
 from .test.mocks import MockMySQLDatabase  # Importar la base de datos simulada
 
 def get_db():
