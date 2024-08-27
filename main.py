@@ -1,19 +1,29 @@
+#main.py
+import os
 import uvicorn
-from fastapi import HTTPException, status,FastAPI
-from database import db
-
+from fastapi import HTTPException, status, FastAPI
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from database import db  # Importar la base de datos real
+from .test.mocks import MockMySQLDatabase  # Importar la base de datos simulada
 
-app = FastAPI()
+def get_db():
+    if os.getenv("TESTING") == "true":
+        return MockMySQLDatabase()
+    return db
 
-@app.on_event("startup")
-async def startup_event():
-    
-    db.connect()
+@asynccontextmanager # Context manager para el ciclo de vida de la aplicación
+async def lifespan(app: FastAPI):
+    db_instance = get_db()
+    try:
+        db_instance.connect()  # Intentar conectar a la base de datos
+        print("Database connection established")
+        yield
+    finally:
+        db_instance.disconnect()  # Desconectar de la base de datos al cerrar la aplicación
+        print("Database connection closed")
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    db.disconnect()
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,12 +42,15 @@ async def hello_world():
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def insert_user(json: dict):
     try:
-        username = json.get("username","N/A")
-        password = json.get("password","N/A")
+        db_instance = get_db()
+        username = json.get("username")
+        password = json.get("password")
+        if not username or not password:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username and password are required")   
         print(json)
         # Lógica para insertar el usuario y obtener el ID
-        result = db.insert_user(username, password)
-        return {"UserId": result} # Devolver el ID del usuario
+        result = db_instance.insert_user(username, password)
+        return {"UserId": result}  # Devolver el ID del usuario
     except Exception as e:
         # Si ocurre un error, lanzar una excepción HTTP con código de estado 500
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -45,7 +58,8 @@ async def insert_user(json: dict):
 @app.get("/user/{username}")
 async def get_user(username: str):
     try:
-        user = db.get_user(username)
+        db_instance = get_db()
+        user = db_instance.get_user(username)
         if user:
             return user
         else:
@@ -58,7 +72,8 @@ async def get_user(username: str):
 @app.get("/users")
 async def get_users():
     try:
-        users = db.get_users()
+        db_instance = get_db()
+        users = db_instance.get_users()
         if users:
             return users
         else:
@@ -71,11 +86,12 @@ async def get_users():
 @app.delete("/user/{id}")
 async def delete_user(id: int):
     try:
-        deleted = db.delete_user(id)
+        db_instance = get_db()
+        deleted = db_instance.delete_user(id)
         if deleted:
             return {"deleted": deleted}
         else:
-            raise HTTPException(status_code=404, detail="No se encontro ningun usuario con ese id")
+            raise HTTPException(status_code=404, detail="No se encontró ningún usuario con ese ID")
     except HTTPException as xp:
         raise xp
     except Exception as e:
@@ -83,5 +99,3 @@ async def delete_user(id: int):
     
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
-
-
