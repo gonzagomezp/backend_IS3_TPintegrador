@@ -83,7 +83,14 @@ async def get_users():
         db_instance = get_db()
         users = db_instance.get_users()
         if users:
-            return users
+            userss = []
+            for user in users:
+                u = {}
+                u["id"] = user[0]
+                u["username"] = user[1]
+                u["password"] = user[2]
+                userss.append(u)
+            return userss
         else:
             raise HTTPException(404, detail="No user found in database")
     except HTTPException as xp:
