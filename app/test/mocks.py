@@ -1,7 +1,7 @@
 # Mock para MySQLDatabase
 class MockModel:
     def __init__(self):
-        self.users = []
+        pass
 
     def connect(self):
         pass
