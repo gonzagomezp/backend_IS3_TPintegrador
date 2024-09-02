@@ -10,8 +10,6 @@ class MockModel:
         pass
 
     def get_users(self):
-        return
-
         return [
             [1, "testuser1", "testpassword1"],
             [2, "testuser2", "testpassword2"]
