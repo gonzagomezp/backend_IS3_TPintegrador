@@ -1,5 +1,5 @@
 # Mock para MySQLDatabase
-class MockMySQLDatabase:
+class MockModel:
     def __init__(self):
         self.users = []
 
@@ -10,18 +10,17 @@ class MockMySQLDatabase:
         pass
 
     def get_users(self):
-        print("GET USERS")
-        print(self.users)
-        return self.users
+
+        return [
+            [1, "testuser1", "testpassword1"],
+            [2, "testuser2", "testpassword2"]
+        ]
 
     def get_user(self, username: str):
-        print("GET USER")
-        print(username)
-        print(self.users)
-        for user in self.users:
-            if user[1] == username:
-                return user
-        return None
+        if (username == "testuser"):
+            return [1, username, "testpassword"]
+        else:
+            return None
 
     def insert_user(self, username: str, password: str):
         if not username or not password:
@@ -32,8 +31,7 @@ class MockMySQLDatabase:
         return user_id
 
     def delete_user(self, idd: int):
-        for user in self.users:
-            if user[0] == idd:
-                self.users.remove(user)
-                return True
-        return False
+        if idd == 1: 
+            return True
+        else:
+            return False

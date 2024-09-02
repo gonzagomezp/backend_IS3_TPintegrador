@@ -5,11 +5,11 @@ from fastapi import HTTPException, FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import db  # Importar la base de datos real
-from app.test.mocks import MockMySQLDatabase  # Importar la base de datos simulada
+from app.test.mocks import MockModel  # Importar la base de datos simulada
 
 def get_db():
     if os.getenv("TESTING") == "true":
-        return MockMySQLDatabase()
+        return MockModel()
     return db
 
 @asynccontextmanager # Context manager para el ciclo de vida de la aplicación
@@ -36,7 +36,7 @@ app.add_middleware(
 @app.get("/")
 async def hello_world():
     db_instance = get_db()
-    if type(db_instance).__name__ == "MockMySQLDatabase":
+    if type(db_instance).__name__ == "MockModel":
         return {
             "Hello World": "This is a FastAPI application with a mock database"
         }
@@ -69,7 +69,11 @@ async def get_user(username: str):
         db_instance = get_db()
         user = db_instance.get_user(username)
         if user:
-            return user
+            user_dict = {}
+            user_dict["id"] = user[0]
+            user_dict["username"] = user[1]
+            user_dict["password"] = user[2]
+            return user_dict
         else:
             raise HTTPException(404, detail="User not found")
     except HTTPException as xp:
