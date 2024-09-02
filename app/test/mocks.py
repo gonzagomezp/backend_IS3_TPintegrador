@@ -22,12 +22,7 @@ class MockModel:
             return None
 
     def insert_user(self, username: str, password: str):
-        if not username or not password:
-            raise ValueError("Username and password are required")
-        user_id = len(self.users) + 1
-        self.users.append((user_id, username, password))
-        print(self.users)
-        return user_id
+        return 1
 
     def delete_user(self, idd: int):
         if idd == 1: 
