@@ -26,14 +26,13 @@ class MySQLDatabase:
             print()
             print("Conexión a MySQL establecida")
             self.create_users_table_if_not_exists()
-        except Error as e:
+        except Exception as e:
             print("-------------------------------")
             print("DATABASE ERROR")
             print()
             print(f"Error al conectar a MySQL: {e}")
             print()
             print("-------------------------------")
-            raise e
 
     def create_users_table_if_not_exists(self):
         create_table_query = """
