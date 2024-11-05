@@ -14,7 +14,7 @@ class MySQLDatabase:
         try:
             connector = Connector()
             self.connection = connector.connect(
-                "frontend-430223:us-central1:mysql-server",
+                "ingenieriadesoftware3:us-central1:mysql-server",
                 "pymysql",
                 user=self.user,
                 password=self.password,

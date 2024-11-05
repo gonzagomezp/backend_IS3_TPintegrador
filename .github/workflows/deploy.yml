@@ -74,4 +74,9 @@
             --image ${{ env.DIGEST }} \
             --platform managed \
             --region us-central1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --cpu 0.5 \
+            --memory 128Mi \
+            --min-instances 0 \
+            --max-instances 5 \
+            --timeout 900
