@@ -1,6 +1,5 @@
 from google.cloud.sql.connector import Connector
 import mysql.connector
-from mysql.connector import Error
 from fastapi import HTTPException
 
 class MySQLDatabase:
@@ -47,7 +46,7 @@ class MySQLDatabase:
             cursor.execute(create_table_query)
             cursor.close()
             print("Tabla 'users' creada o ya existe")
-        except Error as e:
+        except Exception as e:
             print(f"Error al crear la tabla 'users': {e}")
             raise e
 
@@ -67,7 +66,7 @@ class MySQLDatabase:
             users = cursor.fetchall()
             cursor.close()
             return users
-        except Error as e:
+        except Exception as e:
             print(f"Error al obtener usuarios: {e}")
             raise e
 
@@ -82,7 +81,7 @@ class MySQLDatabase:
             user = cursor.fetchone()
             cursor.close()
             return user
-        except Error as e:
+        except Exception as e:
             print(f"Error al obtener usuario: {e}")
             raise e
 
@@ -98,7 +97,7 @@ class MySQLDatabase:
             user_id = cursor.lastrowid
             cursor.close()
             return user_id
-        except Error as e:
+        except Exception as e:
             print(f"Error al insertar usuario: {e}")
             self.connection.rollback()
             raise e
@@ -116,7 +115,7 @@ class MySQLDatabase:
             
             #devolver True si se eliminó al menos un usuario, False en caso contrario
             return deleted > 0
-        except Error as e:
+        except Exception as e:
             print(f"Error al eliminar usuario: {e}")
             self.connection.rollback()
             raise e
