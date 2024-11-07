@@ -7,8 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import db  # Importar la base de datos real
 from app.test.mocks import MockModel  # Importar la base de datos simulada
 
+# Comentar estas 2 lienas para subir a produ
+# esto es para que la conexcion local a la base de datos
+from dotenv import load_dotenv #comentar 
+load_dotenv()
+
 def get_db():
     if os.getenv("TESTING") == "true":
+        print("Using MockModel")
         return MockModel()
     return db
 
