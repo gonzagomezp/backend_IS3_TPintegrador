@@ -41,10 +41,10 @@ async def hello_world():
     db_instance = get_db()
     if type(db_instance).__name__ == "MockModel":
         return {
-            "Hello World": "This is a FastAPI API with a mock database"
+            "Hello World": "This is a FastAPI API with a mock database =)"
         }
     return {
-        "Hello World": "This is a FastAPI API with a real database"
+        "Hello World": "This is a FastAPI API with a real database =)"
     }
 
 @app.post("/user", status_code=201)
