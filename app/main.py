@@ -44,7 +44,7 @@ async def hello_world():
             "Hello World": "This is a FastAPI API with a mock database =)"
         }
     return {
-        "Hello World": "This is a FastAPI API with a real database =)"
+        "Hello World": "This is a FastAPI API with a real database =) !!!!!!!!!!"
     }
 
 @app.post("/user", status_code=201)
