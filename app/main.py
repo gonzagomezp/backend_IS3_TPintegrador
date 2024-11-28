@@ -108,6 +108,7 @@ async def get_users():
 @app.delete("/user/{id}")
 async def delete_user(id: int):
     try:
+        return False
         db_instance = get_db()
         deleted = db_instance.delete_user(id)
         if deleted:
